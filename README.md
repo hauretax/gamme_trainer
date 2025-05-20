@@ -16,10 +16,10 @@ Une application web interactive pour apprendre et pratiquer les gammes musicales
 
 \`\`\`bash
 # Cloner le dépôt
-git clone https://github.com/hauretax/gammes-musicales.git
+git clone https://github.com/hauretax/gamme_trainer.git
 
 # Accéder au répertoire
-cd gammes-musicales
+cd gamme_trainer
 
 # Installer les dépendances
 npm install
