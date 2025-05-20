@@ -13,6 +13,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { loadAppState, saveAppState } from "@/lib/app-state"
 import { AboutSection } from "@/components/about-section"
+import { Music, Play, Upload, Info } from "lucide-react"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 // Toutes les notes possibles
 const ALL_NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
@@ -20,6 +22,10 @@ const ALL_NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "
 export default function MusicScalesApp() {
   // Référence pour suivre si c'est le premier rendu
   const isFirstRender = useRef(true)
+
+  // Détecter si l'écran est petit (mobile) ou très petit
+  const isMobile = useMediaQuery("(max-width: 640px)")
+  const isVerySmall = useMediaQuery("(max-width: 380px)")
 
   // Charger l'état initial depuis le stockage local
   const { scale: initialScale, range: initialRange, activeTab: initialTab } = loadAppState()
@@ -159,12 +165,52 @@ export default function MusicScalesApp() {
         <h1 className="text-3xl font-bold text-center mb-8">Gammes Musicales</h1>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mb-8">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="scales">Gammes et Doigtés</TabsTrigger>
-            <TabsTrigger value="practice">Pratique</TabsTrigger>
-            <TabsTrigger value="upload">Gérer les Images</TabsTrigger>
-            <TabsTrigger value="about">À propos</TabsTrigger>
-          </TabsList>
+          {/* Menu adaptatif pour différentes tailles d'écran */}
+          {isMobile ? (
+            // Version mobile
+            <div className="space-y-2">
+              <TabsList className="grid w-full grid-cols-2 mb-2">
+                <TabsTrigger value="scales" className="flex items-center justify-center gap-2">
+                  <Music className="h-5 w-5" />
+                  {!isVerySmall && <span>Gammes</span>}
+                </TabsTrigger>
+                <TabsTrigger value="practice" className="flex items-center justify-center gap-2">
+                  <Play className="h-5 w-5" />
+                  {!isVerySmall && <span>Pratique</span>}
+                </TabsTrigger>
+              </TabsList>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="upload" className="flex items-center justify-center gap-2">
+                  <Upload className="h-5 w-5" />
+                  {!isVerySmall && <span>Images</span>}
+                </TabsTrigger>
+                <TabsTrigger value="about" className="flex items-center justify-center gap-2">
+                  <Info className="h-5 w-5" />
+                  {!isVerySmall && <span>À propos</span>}
+                </TabsTrigger>
+              </TabsList>
+            </div>
+          ) : (
+            // Version desktop avec texte complet
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="scales" className="flex items-center justify-center gap-2">
+                <Music className="h-4 w-4" />
+                <span>Gammes et Doigtés</span>
+              </TabsTrigger>
+              <TabsTrigger value="practice" className="flex items-center justify-center gap-2">
+                <Play className="h-4 w-4" />
+                <span>Pratique</span>
+              </TabsTrigger>
+              <TabsTrigger value="upload" className="flex items-center justify-center gap-2">
+                <Upload className="h-4 w-4" />
+                <span>Gérer les Images</span>
+              </TabsTrigger>
+              <TabsTrigger value="about" className="flex items-center justify-center gap-2">
+                <Info className="h-4 w-4" />
+                <span>À propos</span>
+              </TabsTrigger>
+            </TabsList>
+          )}
 
           <TabsContent value="scales" className="mt-4">
             <div className="space-y-8">

@@ -14,39 +14,52 @@ export const metadata: Metadata = {
   icons: {
     apple: "/icons/apple-touch-icon.png",
     icon: "/logo.png",
+    shortcut: "/logo.png",
+    other: {
+      rel: "apple-touch-icon-precomposed",
+      url: "/logo.png",
+    },
   },
     generator: 'v0.dev'
 }
 
 export const viewport: Viewport = {
   themeColor: "#4f46e5",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
       <head>
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="icon" href="/logo.png" type="image/png" />
+        <link rel="shortcut icon" href="/logo.png" type="image/png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="theme-color" content="#4f46e5" />
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={inter.className}>
         {children}
         <PWAInstallPrompt />
-        <Script id="handle-github-pages-redirect" strategy="beforeInteractive">
+        <Script id="register-sw" strategy="afterInteractive">
           {`
-            // Gestion des redirections pour GitHub Pages
-            (function() {
-              const params = new URLSearchParams(window.location.search);
-              const redirectPath = params.get('path');
-              if (redirectPath) {
-                // Supprimer le paramètre de l'URL sans recharger la page
-                params.delete('path');
-                const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash;
-                window.history.replaceState({}, document.title, newUrl);
-              }
-            })();
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(
+                  function(registration) {
+                    console.log('Service Worker registration successful with scope: ', registration.scope);
+                  },
+                  function(err) {
+                    console.log('Service Worker registration failed: ', err);
+                  }
+                );
+              });
+            }
           `}
         </Script>
       </body>
