@@ -14,7 +14,7 @@ module.exports = withPWA({
   images: {
     unoptimized: true,
   },
-  assetPrefix: '/gamme_trainer',
+  assetPrefix: '/gamme_trainer/',
   basePath:'/gamme_trainer',
   output: 'export',
   trailingSlash: true,
